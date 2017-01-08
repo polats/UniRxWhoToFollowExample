@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     // set from editor
     public GameObject refreshButton;
     public GameObject suggestion1Text;
+    public GameObject close1Button;
 
     const string HTML_URL = "html_url";
     const string LOGIN = "login";
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         
         var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
+        var close1ClickStream = close1Button.GetComponent<Button>().onClick.AsObservable();
 
         var requestStream = refreshClickStream.Select(
             t =>
@@ -53,11 +55,7 @@ public class GameManager : MonoBehaviour {
         responseStream.Subscribe(
             response => // onSuccess
             {
-                // response is a list of users
-                foreach (Dictionary<string,string> user in response)
-                {
-                    Debug.Log("user: " + user[LOGIN]); 
-                }
+                Debug.Log("users found: " + response.Count); 
             },
             e => // onError
             {
@@ -65,18 +63,21 @@ public class GameManager : MonoBehaviour {
             });
                 
 
-        var suggestion1Stream = responseStream.Select(
-            listUsers =>
+        var suggestion1Stream = close1ClickStream.CombineLatest
+            (
+            responseStream, 
+            (t, listUsers) =>
             {
                 return listUsers[Random.Range(0, listUsers.Count)];
-            }).Merge(
+            })
+            .Merge(
                 refreshClickStream.Select(
                     t =>
                     {
                         Dictionary<string,string> emptyDictionary = null;
                         return emptyDictionary;
                     })
-            );
+             );  
 
 
         suggestion1Stream.Subscribe(
