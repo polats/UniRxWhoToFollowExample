@@ -15,10 +15,24 @@ public class GameManager : MonoBehaviour {
     public GameObject close2Button;
     public GameObject suggestion3Text;
     public GameObject close3Button;
+    public Image userImage1;
+    public Image userImage2;
+    public Image userImage3;
 
     const string HTML_URL = "html_url";
     const string LOGIN = "login";
     const string AVATAR_URL = "avatar_url";
+
+    private IEnumerator refreshImage(Image img, string url)
+    {
+        img.gameObject.SetActive(false);
+        WWW www = new WWW(url);
+        yield return www;
+        img.sprite = Sprite.Create(www.texture, 
+            new Rect(0, 0, www.texture.width, www.texture.height), 
+            new Vector2(0, 0));
+        img.gameObject.SetActive(true);
+    }
 
 	void Start () {
         
@@ -98,6 +112,7 @@ public class GameManager : MonoBehaviour {
                 {
                     suggestion1Text.SetActive(true);
                     suggestion1Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                    StartCoroutine(refreshImage(userImage1, suggestion[AVATAR_URL]));
                 }
             });
 
@@ -130,6 +145,7 @@ public class GameManager : MonoBehaviour {
                 {
                     suggestion2Text.SetActive(true);
                     suggestion2Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                    StartCoroutine(refreshImage(userImage2, suggestion[AVATAR_URL]));
                 }
             });
 
@@ -162,6 +178,7 @@ public class GameManager : MonoBehaviour {
                 {
                     suggestion3Text.SetActive(true);
                     suggestion3Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                    StartCoroutine(refreshImage(userImage3, suggestion[AVATAR_URL]));
                 }
             });
 	}
