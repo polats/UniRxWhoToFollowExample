@@ -10,10 +10,18 @@ public class GameManager : MonoBehaviour {
     public GameObject refreshButton;
 
 	void Start () {
-        var requestStream = UniRx.Observable.Return<string>("https://api.github.com/users");
+        
+        var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
 
+        var requestStream = refreshClickStream.Select(
+            t =>
+            {
+                var randomOffset = Random.Range(1,500);
+                return "https://api.github.com/users?since=" + randomOffset;
+            });
+        
         var responseStream = requestStream.SelectMany(
-              requestUrl =>
+            requestUrl =>
             {
                 return ObservableWWW.Get(requestUrl);
             });
@@ -28,7 +36,6 @@ public class GameManager : MonoBehaviour {
                 Debug.LogException(e);
             });
                 
-        var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
 	}
 	
 }
