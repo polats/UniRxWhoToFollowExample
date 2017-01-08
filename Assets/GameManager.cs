@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour {
                         Dictionary<string,string> emptyDictionary = null;
                         return emptyDictionary;
                     })
-            ).StartWith(new Dictionary<string,string>());  
+            );  
 
 
         suggestion1Stream.Subscribe(
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour {
                         Dictionary<string,string> emptyDictionary = null;
                         return emptyDictionary;
                     })
-            ).StartWith(new Dictionary<string,string>());  
+            );
 
 
         suggestion2Stream.Subscribe(
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour {
                         Dictionary<string,string> emptyDictionary = null;
                         return emptyDictionary;
                     })
-            ).StartWith(new Dictionary<string,string>());  
+            );
 
 
         suggestion3Stream.Subscribe(
