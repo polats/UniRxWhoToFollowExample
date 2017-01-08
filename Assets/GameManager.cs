@@ -11,6 +11,10 @@ public class GameManager : MonoBehaviour {
     public GameObject refreshButton;
     public GameObject suggestion1Text;
     public GameObject close1Button;
+    public GameObject suggestion2Text;
+    public GameObject close2Button;
+    public GameObject suggestion3Text;
+    public GameObject close3Button;
 
     const string HTML_URL = "html_url";
     const string LOGIN = "login";
@@ -20,6 +24,8 @@ public class GameManager : MonoBehaviour {
         
         var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
         var close1ClickStream = close1Button.GetComponent<Button>().onClick.AsObservable();
+        var close2ClickStream = close2Button.GetComponent<Button>().onClick.AsObservable();
+        var close3ClickStream = close3Button.GetComponent<Button>().onClick.AsObservable();
 
         var requestStream = refreshClickStream.StartWith(new Unit()).
             Select(
@@ -93,6 +99,70 @@ public class GameManager : MonoBehaviour {
                 {
                     suggestion1Text.SetActive(true);
                     suggestion1Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                }
+            });
+
+        var suggestion2Stream = close2ClickStream.
+            StartWith(new Unit()).
+            CombineLatest(
+                responseStream, 
+                (t, listUsers) =>
+                {
+                    return listUsers[Random.Range(0, listUsers.Count)];
+                })
+            .Merge(
+                refreshClickStream.Select(
+                    t =>
+                    {
+                        Dictionary<string,string> emptyDictionary = null;
+                        return emptyDictionary;
+                    })
+            ).StartWith(new Dictionary<string,string>());  
+
+
+        suggestion2Stream.Subscribe(
+            suggestion =>
+            {
+                if (suggestion == null)
+                {
+                    suggestion2Text.SetActive(false);
+                }
+                else
+                {
+                    suggestion2Text.SetActive(true);
+                    suggestion2Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                }
+            });
+
+        var suggestion3Stream = close3ClickStream.
+            StartWith(new Unit()).
+            CombineLatest(
+                responseStream, 
+                (t, listUsers) =>
+                {
+                    return listUsers[Random.Range(0, listUsers.Count)];
+                })
+            .Merge(
+                refreshClickStream.Select(
+                    t =>
+                    {
+                        Dictionary<string,string> emptyDictionary = null;
+                        return emptyDictionary;
+                    })
+            ).StartWith(new Dictionary<string,string>());  
+
+
+        suggestion3Stream.Subscribe(
+            suggestion =>
+            {
+                if (suggestion == null)
+                {
+                    suggestion3Text.SetActive(false);
+                }
+                else
+                {
+                    suggestion3Text.SetActive(true);
+                    suggestion3Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
                 }
             });
 	}
