@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour {
         var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
         var close1ClickStream = close1Button.GetComponent<Button>().onClick.AsObservable();
 
-        var requestStream = refreshClickStream.Select(
+        var requestStream = refreshClickStream.StartWith(new Unit()).
+            Select(
             t =>
             {
                 var randomOffset = Random.Range(1,500);
@@ -63,8 +64,9 @@ public class GameManager : MonoBehaviour {
             });
                 
 
-        var suggestion1Stream = close1ClickStream.CombineLatest
-            (
+        var suggestion1Stream = close1ClickStream.
+            StartWith(new Unit()).
+            CombineLatest(
             responseStream, 
             (t, listUsers) =>
             {
@@ -77,7 +79,7 @@ public class GameManager : MonoBehaviour {
                         Dictionary<string,string> emptyDictionary = null;
                         return emptyDictionary;
                     })
-             );  
+            ).StartWith(new Dictionary<string,string>());  
 
 
         suggestion1Stream.Subscribe(
