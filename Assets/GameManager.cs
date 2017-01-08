@@ -64,19 +64,18 @@ public class GameManager : MonoBehaviour {
                 Debug.LogException(e);
             });
                 
-        /*
+
         var suggestion1Stream = responseStream.Select(
             listUsers =>
             {
-                return listUsers.ToString();
+                return listUsers[Random.Range(0, listUsers.Count)];
             });
 
         suggestion1Stream.Subscribe(
             suggestion =>
             {
-                suggestion1Text.GetComponentInChildren<Text>().text = suggestion;
+                suggestion1Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
             });
-            */
 	}
     
 	
