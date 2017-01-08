@@ -69,12 +69,28 @@ public class GameManager : MonoBehaviour {
             listUsers =>
             {
                 return listUsers[Random.Range(0, listUsers.Count)];
-            });
+            }).Merge(
+                refreshClickStream.Select(
+                    t =>
+                    {
+                        Dictionary<string,string> emptyDictionary = null;
+                        return emptyDictionary;
+                    })
+            );
+
 
         suggestion1Stream.Subscribe(
             suggestion =>
             {
-                suggestion1Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                if (suggestion == null)
+                {
+                    suggestion1Text.SetActive(false);
+                }
+                else
+                {
+                    suggestion1Text.SetActive(true);
+                    suggestion1Text.GetComponentInChildren<Text>().text = suggestion[LOGIN];
+                }
             });
 	}
     
