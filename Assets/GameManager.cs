@@ -37,6 +37,12 @@ public class GameManager : MonoBehaviour {
                 Debug.LogException(e);
             });
                 
+
+        var suggestion1Stream = responseStream.Select(
+            listUsers =>
+            {
+                return listUsers[Random.Range(0, listUsers.Length)];
+            });
 	}
 	
 }
