@@ -13,18 +13,13 @@ public class GameManager : MonoBehaviour {
         
         var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
 
-        var requestOnRefreshStream = refreshClickStream.Select(
+        var requestStream = refreshClickStream.Select(
             t =>
             {
                 var randomOffset = Random.Range(1,500);
                 return "https://api.github.com/users?since=" + randomOffset;
-            });
-
-        var startupRequestStream = UniRx.Observable.Return<string>("https://api.github.com/users");
-
-        var requestStream = UniRx.Observable.Merge(
-            requestOnRefreshStream, startupRequestStream
-            );
+            })
+            .Merge(UniRx.Observable.Return<string>("https://api.github.com/users"));
         
         var responseStream = requestStream.SelectMany(
             requestUrl =>
