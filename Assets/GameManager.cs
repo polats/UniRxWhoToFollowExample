@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         var requestStream = UniRx.Observable.Return<string>("https://api.github.com/users");
 
-        requestStream.Subscribe( t =>
+        requestStream.Subscribe(
+            requestUrl =>
             {
-                var responseStream = ObservableWWW.Get(t);
+                var responseStream = ObservableWWW.Get(requestUrl);
 
                 responseStream.Subscribe(
                     response => // onSuccess
@@ -21,6 +22,14 @@ public class GameManager : MonoBehaviour {
                     {
                         Debug.LogException(e);
                     });
+
+
+            });
+
+        var responseMetastream = requestStream.Select(
+              requestUrl =>
+            {
+                return ObservableWWW.Get(requestUrl);
             });
 	}
 	
