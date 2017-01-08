@@ -27,7 +27,8 @@ public class GameManager : MonoBehaviour {
             {
                 Debug.LogException(e);
             });
-
+                
+        var refreshClickStream = refreshButton.GetComponent<Button>().onClick.AsObservable();
 	}
 	
 }
