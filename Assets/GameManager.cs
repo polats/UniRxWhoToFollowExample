@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UniRx;
 
 public class GameManager : MonoBehaviour {
+
+    // set from editor
+    public GameObject refreshButton;
 
 	void Start () {
         var requestStream = UniRx.Observable.Return<string>("https://api.github.com/users");
