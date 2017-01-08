@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
                 var randomOffset = Random.Range(1,500);
                 return "https://api.github.com/users?since=" + randomOffset;
             })
-            .Merge(UniRx.Observable.Return<string>("https://api.github.com/users"));
+            .StartWith("https://api.github.com/users");
         
         var responseStream = requestStream.SelectMany(
             requestUrl =>
